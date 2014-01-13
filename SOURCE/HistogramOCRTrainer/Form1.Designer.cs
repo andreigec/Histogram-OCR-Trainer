@@ -42,8 +42,9 @@
             this.letterhistogramdisplayTB = new System.Windows.Forms.TextBox();
             this.lettersLB = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.testTextBox = new System.Windows.Forms.TextBox();
             this.loadButtonB = new System.Windows.Forms.Button();
+            this.testTextBox = new System.Windows.Forms.TextBox();
+            this.removebutton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -113,6 +114,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.removebutton);
             this.tabPage1.Controls.Add(this.addletters);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.label1);
@@ -183,6 +185,16 @@
             this.tabPage2.Text = "Testing";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // loadButtonB
+            // 
+            this.loadButtonB.Location = new System.Drawing.Point(25, 51);
+            this.loadButtonB.Name = "loadButtonB";
+            this.loadButtonB.Size = new System.Drawing.Size(183, 23);
+            this.loadButtonB.TabIndex = 1;
+            this.loadButtonB.Text = "Load Word Find to Test";
+            this.loadButtonB.UseVisualStyleBackColor = true;
+            this.loadButtonB.Click += new System.EventHandler(this.loadButtonB_Click);
+            // 
             // testTextBox
             // 
             this.testTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -194,15 +206,15 @@
             this.testTextBox.Size = new System.Drawing.Size(461, 319);
             this.testTextBox.TabIndex = 0;
             // 
-            // loadButtonB
+            // removebutton
             // 
-            this.loadButtonB.Location = new System.Drawing.Point(25, 51);
-            this.loadButtonB.Name = "loadButtonB";
-            this.loadButtonB.Size = new System.Drawing.Size(183, 23);
-            this.loadButtonB.TabIndex = 1;
-            this.loadButtonB.Text = "Load Word Find to Test";
-            this.loadButtonB.UseVisualStyleBackColor = true;
-            this.loadButtonB.Click += new System.EventHandler(this.loadButtonB_Click);
+            this.removebutton.Location = new System.Drawing.Point(9, 279);
+            this.removebutton.Name = "removebutton";
+            this.removebutton.Size = new System.Drawing.Size(108, 23);
+            this.removebutton.TabIndex = 5;
+            this.removebutton.Text = "Remove Selected";
+            this.removebutton.UseVisualStyleBackColor = true;
+            this.removebutton.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -246,6 +258,7 @@
         private System.Windows.Forms.Button addletters;
         private System.Windows.Forms.TextBox testTextBox;
         private System.Windows.Forms.Button loadButtonB;
+        private System.Windows.Forms.Button removebutton;
     }
 }
 

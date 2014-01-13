@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using ANDREICSLIB;
 using ANDREICSLIB.ClassExtras;
 using ANDREICSLIB.NewControls;
+using HistogramOCRTrainer.ServiceReference1;
 
 namespace HistogramOCRTrainer
 {
@@ -18,12 +19,8 @@ namespace HistogramOCRTrainer
         #region licensing
 
         private const string AppTitle = "Histogram OCR Trainer";
-        private const double AppVersion = 0.1;
+        private const double AppVersion = 0.2;
         private const String HelpString = "";
-
-        private const String UpdatePath = "https://github.com/EvilSeven/Histogram-OCR-Trainer/zipball/master";
-        private const String VersionPath = "https://raw.github.com/EvilSeven/Histogram-OCR-Trainer/master/INFO/version.txt";
-        private const String ChangelogPath = "https://raw.github.com/EvilSeven/Histogram-OCR-Trainer/master/INFO/changelog.txt";
 
         private readonly String OtherText =
             @"©" + DateTime.Now.Year +
@@ -49,13 +46,40 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var sd = new Licensing.SolutionDetails(HelpString, AppTitle, AppVersion, OtherText, VersionPath, UpdatePath,
-                                                   ChangelogPath);
-            Licensing.CreateLicense(this, sd, menuStrip1);
+            Licensing.CreateLicense(this, menuStrip1, new Licensing.SolutionDetails(GetDetails, HelpString, AppTitle, AppVersion, OtherText));
+
 
             h = new HistogramOCR();
             RefreshLettersList();
         }
+
+        public Licensing.DownloadedSolutionDetails GetDetails()
+        {
+            try
+            {
+                var sr = new ServicesClient();
+                var ti = sr.GetTitleInfo(AppTitle);
+                if (ti == null)
+                    return null;
+                return ToDownloadedSolutionDetails(ti);
+
+            }
+            catch (Exception)
+            {
+            }
+            return null;
+        }
+
+        public static Licensing.DownloadedSolutionDetails ToDownloadedSolutionDetails(TitleInfoServiceModel tism)
+        {
+            return new Licensing.DownloadedSolutionDetails()
+            {
+                ZipFileLocation = tism.LatestTitleDownloadPath,
+                ChangeLog = tism.LatestTitleChangelog,
+                Version = tism.LatestTitleVersion
+            };
+        }
+
 
         private void RefreshLettersList()
         {
@@ -184,8 +208,8 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
             var images = h.SplitUp(b);
 
             //load white space straight away
-            if (h.Letters.Any(s=>s.Letter.Equals(' '))==false)
-            h.Train(HistogramOCR.WhiteBitmap, ' ');
+            if (h.Letters.Any(s => s.Letter.Equals(' ')) == false)
+                h.Train(HistogramOCR.WhiteBitmap, ' ');
 
             //for each image that hasnt been seen, have the player enter it
             foreach (var row in images)
@@ -211,7 +235,7 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
                     if (letters == null)
                         return;
 
-                    if (letters.Length==0)
+                    if (letters.Length == 0)
                     {
                         continue;
 
@@ -223,11 +247,11 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
                         return;
                     }
 
-                    if(h.Letters.Any(s=>s.Letter.Equals(letter)))
+                    if (h.Letters.Any(s => s.Letter.Equals(letter)))
                     {
-                        h.Letters.RemoveAll(s=>s.Letter.Equals(letter));
+                        h.Letters.RemoveAll(s => s.Letter.Equals(letter));
                     }
-                    
+
                     //train
                     h.Train(col, letter);
                 }
@@ -296,5 +320,25 @@ Zip Assets © SharpZipLib (http://www.sharpdevelop.net/OpenSource/SharpZipLib/)
 
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lettersLB.SelectedItems.Count == 0)
+                    return;
+
+                foreach (var i in lettersLB.SelectedItems)
+                {
+                    var ch = i.ToString()[0];
+                    h.RemoveByLetter(ch);
+                }
+
+                ListBoxExtras.RemoveSelected(ref lettersLB);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error removing items:" + ex);
+            }
+        }
     }
 }

@@ -1,1 +1,0 @@
-Used to train the Histogram OCR library portion of ANDREICSLIB
